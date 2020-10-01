@@ -6,15 +6,28 @@
 //
 
 import UIKit
+import WebKit
 
 class ViewController: UIViewController {
-
+    
+    var rootView = MainView()
+    
+    override func loadView() {
+        super.loadView()
+        
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        view.backgroundColor = .green
+        view = rootView
     }
-
-
 }
+
+
+
+
+
+
+
 
