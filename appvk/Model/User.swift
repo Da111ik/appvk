@@ -4,53 +4,41 @@
 //
 //  Created by Дарья Шимко on 01.10.2020.
 //
+import Foundation
 
-import UIKit
-import SwiftyJSON
-
-class User {
-    
-    let name: String
-    let avaterImage: UIImage?
-    let friends: [User]? = nil
-    let group: [Group]? = nil
-    
-    init(_ name: String, _ avaterImage: UIImage) {
-        
-        self.name = name
-        self.avaterImage = avaterImage
-    }
+// MARK: - UserModel
+struct UserModel: Codable {
+    let response: ResponseUser
 }
 
-
-
+// MARK: - Response
+struct ResponseUser: Codable {
+    let count: Int
+    let items: [ItemUser]
+}
 
 // MARK: - Item
-struct UserJSON: Codable {
-    
+struct ItemUser: Codable {
     let id: Int
     let firstName, lastName: String
-    var isClosed, canAccessClosed: Bool?
+    let isClosed, canAccessClosed: Bool?
     let nickname: String?
     let photo200: String
     let online: Int
     let trackCode: String
     let deactivated: String?
+    let lists: [Int]?
 
-    
-    init(from json: JSON) {
-    
-        self.id                 = json["id"].int!
-        self.firstName          = json["first_name"].stringValue
-        self.lastName           = json["last_name"].stringValue
-        self.isClosed           = json["is_closed"].boolValue
-        self.canAccessClosed    = json["can_access_closed"].boolValue
-        self.nickname           = json["nickname"].stringValue
-        self.photo200           = json["photo_200"].stringValue
-        self.online             = json["online"].int!
-        self.trackCode          = json["track_code"].stringValue
-        self.deactivated        = json["deactivated"].stringValue
-        
+    enum CodingKeys: String, CodingKey {
+        case id
+        case firstName = "first_name"
+        case lastName = "last_name"
+        case isClosed = "is_closed"
+        case canAccessClosed = "can_access_closed"
+        case nickname
+        case photo200 = "photo_200"
+        case online
+        case trackCode = "track_code"
+        case deactivated, lists
     }
-    
 }

@@ -10,7 +10,7 @@ import WebKit
 
 class MainView: WKWebView {
     
-    var webView = WKWebView(){
+    var webView: WKWebView! {
         didSet {
             webView.navigationDelegate = self
         }
@@ -29,6 +29,8 @@ class MainView: WKWebView {
  
     func setup() {
         
+        webView = WKWebView()
+        
         var components = URLComponents()
         components.scheme = "https"
         components.host = "oauth.vk.com"
@@ -43,27 +45,28 @@ class MainView: WKWebView {
         ]
         
         let request = URLRequest(url: components.url!)
-                
+        
         webView.load(request)
         
         addSubview(webView)
         
-        webView.translatesAutoresizingMaskIntoConstraints = true
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        
         setNeedsUpdateConstraints()
-        
-        
     }
 
     override func updateConstraints() {
         
+        super.updateConstraints()
+        
         NSLayoutConstraint.activate([
-            webView.leftAnchor.constraint(equalTo: rightAnchor),
+            webView.leftAnchor.constraint(equalTo: leftAnchor),
             webView.rightAnchor.constraint(equalTo: rightAnchor),
             webView.topAnchor.constraint(equalTo: topAnchor),
             webView.bottomAnchor.constraint(equalTo: bottomAnchor)
             
         ])
-        super.updateConstraints()
+        
     }
 
 }
@@ -86,8 +89,6 @@ extension MainView: WKNavigationDelegate {
                 return dict
         }
         
-        print(params)
-        
         guard let token = params["access_token"],
             let userIdString = params["user_id"],
             let userId = Int(userIdString) else {
@@ -100,12 +101,27 @@ extension MainView: WKNavigationDelegate {
         
                 
         // Пример для вывода в консоль
+
+        VKService.shared.loadFriends(token: token){ user in
+            debugPrint(user)
+        }
+         
         
-        NetworkService.shared.loadPhotos(token: token, ownerId: Session.shared.userId!)
+        VKService.shared.loadPhotos(token: token, ownerId: Session.shared.userId!) { photos in
+            debugPrint(photos)
+        }
+       
+        VKService.shared.loadGroups(token: token) { groups in
+            debugPrint(groups)
+        }
+       
+        VKService.shared.loadSearchGroups(token: token, query: "Music"){ groups in
+            debugPrint(groups)
+        }
+
         
-        NetworkService.shared.loadGroups(token: token)
         
-        NetworkService.shared.loadSearchGroups(token: token, query: "Music")
+        
         
         decisionHandler(.cancel)
     }
