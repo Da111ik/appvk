@@ -6,84 +6,73 @@
 //
 
 import Foundation
-import SwiftyJSON
 
-// MARK: - PhotoJSON
-struct PhotoJSON: Codable {
-    
-    let albumID, id, ownerID: Int
+// MARK: - PhotoModel
+struct PhotoModel: Codable {
+    let response: ResponsePhoto
+}
+
+// MARK: - Response
+struct ResponsePhoto: Codable {
+    let count: Int
+    let items: [ItemPhoto]
+}
+
+// MARK: - Item
+struct ItemPhoto: Codable {
+    let albumID, date, id, ownerID: Int
     let hasTags: Bool
-    let sizes: [SizePhoto]
+    let sizes: [Size]
     let text: String
-    let likes: LikesPhoto
-    let reposts: RepostsPhoto
-    let date: Date
-    
-    private var dateFormatter: DateFormatter = {
-        
-        let df = DateFormatter()
-        df.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        df.timeZone = TimeZone(secondsFromGMT: 0)
-        
-        return df
-    }()
-    
-    init(from json: JSON) {
-        
-        self.id = json["id"].int!
-        self.albumID = json["album_id"].int!
-        self.ownerID = json["owner_id"].int!
-        self.sizes = json["siezes"].arrayValue.map { SizePhoto(from: $0)}
-        self.text = json["text"].stringValue
-        self.hasTags = json["has_tags"].boolValue
-        
-        let dateDouble = json["date"].doubleValue
-        self.date = Date(timeIntervalSince1970: dateDouble)
-       
-        self.likes = LikesPhoto(from: json["likes"])
-        self.reposts = RepostsPhoto(from: json["reposts"])
-        
-    }
-    
+    let likes: Likes
+    let reposts: Reposts
+    let lat, long: Double?
+    let postID: Int?
+
     enum CodingKeys: String, CodingKey {
         case albumID = "album_id"
         case date, id
         case ownerID = "owner_id"
         case hasTags = "has_tags"
-        case sizes, text, likes, reposts
-    }
-}
-
-// MARK: - Size
-struct SizePhoto: Codable {
-    let type: String
-    let url: String
-    let width, height: Int
-    
-    init(from json: JSON) {
-        self.type = json["type"].stringValue
-        self.url = json["url"].stringValue
-        self.width = json["width"].int ?? 0
-        self.height = json["height"].int ?? 0
+        case sizes, text, likes, reposts, lat, long
+        case postID = "post_id"
     }
 }
 
 // MARK: - Likes
-struct LikesPhoto: Codable {
+struct Likes: Codable {
     let userLikes, count: Int
 
-    init(from json: JSON) {
-        self.userLikes = json["user_likes"].int ?? 0
-        self.count = json["count"].int ?? 0
+    enum CodingKeys: String, CodingKey {
+        case userLikes = "user_likes"
+        case count
     }
-
 }
 
 // MARK: - Reposts
-struct RepostsPhoto: Codable {
+struct Reposts: Codable {
     let count: Int
-    
-    init(from json: JSON) {
-        self.count = json["count"].int ?? 0
-    }
 }
+
+// MARK: - Size
+struct Size: Codable {
+    let height: Int
+    let url: String
+    let type: TypeEnum
+    let width: Int
+}
+
+enum TypeEnum: String, Codable {
+    case m = "m"
+    case o = "o"
+    case p = "p"
+    case q = "q"
+    case r = "r"
+    case s = "s"
+    case w = "w"
+    case x = "x"
+    case y = "y"
+    case z = "z"
+}
+
+
