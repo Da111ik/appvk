@@ -5,7 +5,21 @@
 //  Created by Дарья Шимко on 01.10.2020.
 //
 
-import Foundation
+import UIKit
+
+class Group {
+    
+    let name: String
+    let avatarImage: UIImage?
+      
+    init(_ name: String, _ avatarImage: UIImage?) {
+        
+        self.name = name
+        self.avatarImage = avatarImage
+        
+    }
+    
+}
 
 // MARK: - GroupModel
 struct GroupModel: Codable {

@@ -10,11 +10,13 @@ import WebKit
 
 class MainView: WKWebView {
     
-    var webView: WKWebView! {
+     var webView: WKWebView! {
         didSet {
             webView.navigationDelegate = self
         }
     }
+    
+    var delegate: MainViewController!
     
     override init(frame: CGRect, configuration: WKWebViewConfiguration) {
         super.init(frame: frame, configuration: configuration)
@@ -99,30 +101,25 @@ extension MainView: WKNavigationDelegate {
         Session.shared.token = token
         Session.shared.userId = userId
         
-                
-        // Пример для вывода в консоль
-
-        VKService.shared.loadFriends(token: token){ user in
-            debugPrint(user)
-        }
          
         
-        VKService.shared.loadPhotos(token: token, ownerId: Session.shared.userId!) { photos in
-            debugPrint(photos)
-        }
-       
-        VKService.shared.loadGroups(token: token) { groups in
-            debugPrint(groups)
-        }
-       
-        VKService.shared.loadSearchGroups(token: token, query: "Music"){ groups in
-            debugPrint(groups)
-        }
+        // Пример для вывода в консоль
 
-        
-        
+   
+//        VKService.shared.loadPhotos(token: token, ownerId: Session.shared.userId!) { photos in
+//            debugPrint(photos)
+//        }
+//       
+//       
+//        VKService.shared.loadSearchGroups(token: token, query: "Music"){ groups in
+//            debugPrint(groups)
+//        }
         
         
         decisionHandler(.cancel)
+        
+        delegate.createTabbarController()
     }
+    
+    
 }

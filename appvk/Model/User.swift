@@ -4,7 +4,24 @@
 //
 //  Created by Дарья Шимко on 01.10.2020.
 //
-import Foundation
+import UIKit
+
+
+class User{
+    
+    let name: String
+    let avaterImage: UIImage?
+    let friends: [User]? = nil
+    let group: [Group]? = nil
+    
+    init(_ name: String, _ avaterImage: UIImage) {
+        
+        self.name = name
+        self.avaterImage = avaterImage
+    }
+
+}
+
 
 // MARK: - UserModel
 struct UserModel: Codable {
@@ -24,7 +41,7 @@ struct ItemUser: Codable {
     let isClosed, canAccessClosed: Bool?
     let nickname: String?
     let photo200: String
-    let online: Int
+    let online: Int?
     let trackCode: String
     let deactivated: String?
     let lists: [Int]?
